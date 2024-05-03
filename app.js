@@ -25,8 +25,23 @@ app.get("/profile", isLoggedIn, async (req, res) => {
   //reading the data we saved there
   // res.send(req.user);
 
-  let user = await userModel.findOne({email:req.user.email})
-  res.render("profile", {user});
+  let user = await userModel.findOne({ email: req.user.email }).populate("posts");
+  //console.log(user); 
+  res.render("profile", { user });
+});
+
+app.post("/post", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  let {content} = req.body;
+  let post = await postModel.create({
+    user: user._id,
+    //date is default
+    content: content,
+  });
+
+  user.posts.push(post._id);
+  await user.save();
+  res.redirect("/profile");
 });
 
 app.get("/logout", (req, res) => {
@@ -75,16 +90,16 @@ app.post("/login", async (req, res) => {
 function isLoggedIn(req, res, next) {
   const token = req.cookies.token;
   if (!token) {
-      res.redirect("/login");
+    res.redirect("/login");
   } else {
-      try {
-          let data = jwt.verify(token, "shhh");
-          req.user = data;
-          next();
-      } catch (error) {
-          console.error("Token verification failed:", error);
-          res.redirect("/login");
-      }
+    try {
+      let data = jwt.verify(token, "shhh");
+      req.user = data;
+      next();
+    } catch (error) {
+      console.error("Token verification failed:", error);
+      res.redirect("/login");
+    }
   }
 }
 
