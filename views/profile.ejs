@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="p-5 w-full min-h-screen bg-zinc-900 text-white">
+      <a class="bg-red-700 rounded-md px-2 py-2 text-sm" href="/logout"
+        >Logout?</a
+      >
+
+      <h3 class="text-3xl mb-3 mt-5">Hello, <%= user.name %></h3>
+      <h5 class="mb-3">Try creating a new post?</h5>
+
+      <form action="/post" method="post">
+        <textarea
+          placeholder="What's on your mind?"
+          class="block p-2 outline-none w-1/3 resize-none bg-transparent border-2 border-zince-800 rounded-md"
+          name=""
+        ></textarea>
+        <input
+          class="block px-3 py-2 bg-blue-800 rounded-md w-40 mt-2"
+          type="submit"
+          value="Create?"
+        />
+      </form>
+      <div class="mt-20">
+        your creations...
+        <div class="postcontainer">
+          <div
+            class="mt-5 post w-1/3 p-5 border-[1px] mb-4 bg-zinc-800 border-zinc-700 outline-none rounded-md"
+          >
+            <h4 class="mb-2 text-blue-300">@username</h4>
+            <p class="tracking-tight text-sm">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Asperiores provident ullam laboriosam obcaecati, deleniti odio ab
+              neque quae autem! Incidunt aliquid quos distinctio excepturi, illo
+              mollitia eveniet nostrum, vel fugiat eligendi obcaecati, commodi
+              quas sapiente voluptas quae. Saepe quia, explicabo numquam quidem,
+              recusandae, quae aliquam repellendus ea fuga et pariatur!
+            </p>
+            <div class="btns flex mt-5 gap-4">
+              <a class="text-red-600" href="">like?</a>
+              <a class="text-zinc-400" href="">edit?</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

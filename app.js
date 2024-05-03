@@ -21,11 +21,12 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.get("/profile", isLoggedIn, (req, res) => {
+app.get("/profile", isLoggedIn, async (req, res) => {
   //reading the data we saved there
-  res.send(req.user);
+  // res.send(req.user);
 
-  res.render("login");
+  let user = await userModel.findOne({email:req.user.email})
+  res.render("profile", {user});
 });
 
 app.get("/logout", (req, res) => {
@@ -65,19 +66,25 @@ app.post("/login", async (req, res) => {
     if (result) {
       let token = jwt.sign({ email: email, userid: user._id }, "shhh");
       res.cookie("token", token);
-      res.status(200).send("Logged in successfully!");
+      res.status(200).redirect("/profile");
     } else res.redirect("/login");
   });
 });
 
 //middleware for protected route- profile
 function isLoggedIn(req, res, next) {
-  if (req.cookies.token === "") res.send("You must be logged in!");
-  else {
-    let data = jwt.verfiy(req.cookies.token, "shhh");
-    //putting the data username and email into user field
-    req.user = data;
-    next();
+  const token = req.cookies.token;
+  if (!token) {
+      res.redirect("/login");
+  } else {
+      try {
+          let data = jwt.verify(token, "shhh");
+          req.user = data;
+          next();
+      } catch (error) {
+          console.error("Token verification failed:", error);
+          res.redirect("/login");
+      }
   }
 }
 
