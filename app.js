@@ -21,6 +21,18 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
+app.get("/profile", isLoggedIn, (req, res) => {
+  //reading the data we saved there
+  res.send(req.user);
+
+  res.render("login");
+});
+
+app.get("/logout", (req, res) => {
+  res.cookie("token", "");
+  res.redirect("/login");
+});
+
 app.post("/register", async (req, res) => {
   let { name, username, password, age, email } = req.body;
   let user = await userModel.findOne({ email });
@@ -28,7 +40,7 @@ app.post("/register", async (req, res) => {
 
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(password, salt, async (err, hash) => {
-     let user =  await userModel.create({
+      let user = await userModel.create({
         username,
         email,
         age,
@@ -43,13 +55,30 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  let { email,  password } = req.body;
+  let { email, password } = req.body;
   let user = await userModel.findOne({ email });
   if (!user) return res.status(500).send("Something went wrong!");
 
   //password matching
-  
-  bcrypt.compare(password, user.password)
+
+  bcrypt.compare(password, user.password, (err, result) => {
+    if (result) {
+      let token = jwt.sign({ email: email, userid: user._id }, "shhh");
+      res.cookie("token", token);
+      res.status(200).send("Logged in successfully!");
+    } else res.redirect("/login");
+  });
 });
+
+//middleware for protected route- profile
+function isLoggedIn(req, res, next) {
+  if (req.cookies.token === "") res.send("You must be logged in!");
+  else {
+    let data = jwt.verfiy(req.cookies.token, "shhh");
+    //putting the data username and email into user field
+    req.user = data;
+    next();
+  }
+}
 
 app.listen(3300);
