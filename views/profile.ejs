@@ -41,7 +41,7 @@
             <small class="text-sm mt-4 inline-block"><%=post.likes.length%></small>
             <div class="btns flex gap-4">
               <a class="text-yellow-300" href="/like/<%=post._id%>"><%=post.likes.indexOf(user._id) === -1 ? "like" : "unlike" %></a>
-              <a class="text-zinc-400" href="">edit?</a>
+              <a class="text-zinc-400" href="/like/<%=post._id%>">edit?</a>
             </div>
           </div>
           <% }) %>
