@@ -12,8 +12,9 @@ A simple, lightweight user profile management system built with Node.js and Expr
 - Simple and intuitive UI using EJS templates and Tailwind CSS
 
 ## Built With
-• Node.js - The runtime server environment
-• Express - The web application framework used
-• MongoDB - The database used
-• EJS - Templating engine
-• Tailwind CSS - For styling
+
+- Node.js - The runtime server environment
+- Express - The web application framework used
+- MongoDB - The database used
+- EJS - Templating engine
+- Tailwind CSS - For styling
