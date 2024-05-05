@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const userModel = require("./models/user");
 const postModel = require("./models/post");
+const crypto = require("crypto");
+const path = require("path");
 
 const app = express();
 
@@ -51,9 +53,11 @@ app.get("/edit/:id", isLoggedIn, async (req, res) => {
 });
 
 app.post("/update/:id", isLoggedIn, async (req, res) => {
-  let post = await postModel
-    .findOneAndUpdate({ _id: req.params.id }, { content: req.body.content });
-  res.redirect("/profile")
+  let post = await postModel.findOneAndUpdate(
+    { _id: req.params.id },
+    { content: req.body.content }
+  );
+  res.redirect("/profile");
 });
 
 app.post("/post", isLoggedIn, async (req, res) => {
